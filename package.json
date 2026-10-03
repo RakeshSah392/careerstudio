@@ -1,0 +1,19 @@
+{
+  "name": "job-application-agent",
+  "private": true,
+  "type": "module",
+  "workspaces": ["frontend", "backend"],
+  "scripts": {
+    "dev": "concurrently -k -n api,web -c yellow,cyan \"npm run dev --workspace backend\" \"npm run dev --workspace frontend\"",
+    "build": "npm run build --workspace frontend",
+    "test": "npm test --workspace backend",
+    "test:integration": "npm run test:integration --workspace backend",
+    "test:profile": "npm run profile:integration --workspace backend",
+    "test:resume": "npm run resume:integration --workspace backend",
+    "db:check": "npm run db:check --workspace backend",
+    "start": "npm run start --workspace backend"
+  },
+  "devDependencies": {
+    "concurrently": "^9.2.1"
+  }
+}

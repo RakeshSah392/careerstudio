@@ -1,0 +1,9 @@
+node_modules/
+dist/
+backend/.data/
+.env
+.env.*.local
+npm-debug.log*
+# Local development scratch files
+scratch/
+scratch_*.mjs
