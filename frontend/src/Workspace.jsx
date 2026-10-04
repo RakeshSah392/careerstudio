@@ -4512,28 +4512,28 @@ function Workspace() {
     }
   }
 
-  async function updateModalApplicationStage(status) {
-    if (!selectedApplication || applicationUpdating) return
-    setApplicationUpdating(true)
-    setApplicationModalFeedback({ error: '', success: '' })
-    try {
-      const response = await fetch(`/api/applications/${selectedApplication.id}`, {
-        method: 'PATCH',
-        credentials: 'include',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ status }),
-      })
-      const result = await readApiResponse(response)
-      if (!response.ok) throw new Error(result.error ?? 'Could not update application status.')
-      setJobs((current) => current.map((job) => job.id === selectedApplication.id ? result : job))
-      setSelectedApplication(result)
-      setApplicationModalFeedback({ error: '', success: `Status updated to ${status}.` })
-    } catch (err) {
-      setApplicationModalFeedback({ error: err.message || 'Could not update status.', success: '' })
-    } finally {
-      setApplicationUpdating(false)
-    }
-  }
+  // async function updateModalApplicationStage(status) {
+  //   if (!selectedApplication || applicationUpdating) return
+  //   setApplicationUpdating(true)
+  //   setApplicationModalFeedback({ error: '', success: '' })
+  //   try {
+  //     const response = await fetch(`/api/applications/${selectedApplication.id}`, {
+  //       method: 'PATCH',
+  //       credentials: 'include',
+  //       headers: { 'Content-Type': 'application/json' },
+  //       body: JSON.stringify({ status }),
+  //     })
+  //     const result = await readApiResponse(response)
+  //     if (!response.ok) throw new Error(result.error ?? 'Could not update application status.')
+  //     setJobs((current) => current.map((job) => job.id === selectedApplication.id ? result : job))
+  //     setSelectedApplication(result)
+  //     setApplicationModalFeedback({ error: '', success: `Status updated to ${status}.` })
+  //   } catch (err) {
+  //     setApplicationModalFeedback({ error: err.message || 'Could not update status.', success: '' })
+  //   } finally {
+  //     setApplicationUpdating(false)
+  //   }
+  // }
 
   async function updateStage(id, status) {
     try {
@@ -4977,23 +4977,12 @@ function Workspace() {
                     <td>{job.location || '—'}</td>
                     <td className="date-cell">{job.applied_at ? formatDate(job.applied_at) : '—'}</td>
                     <td>
-                      <label
+                      <span
                         className={`stage-select stage-${(job.status || 'saved').toLowerCase()}`}
-                        onClick={(e) => e.stopPropagation()}
-                        onKeyDown={(e) => e.stopPropagation()}
+                        style={{ cursor: 'default' }}
                       >
                         <span>{job.status}</span>
-                        <ChevronDown size={13} />
-                        <select
-                          aria-label={`Change stage for ${job.role} at ${job.company}`}
-                          value={job.status}
-                          onClick={(e) => e.stopPropagation()}
-                          onKeyDown={(e) => e.stopPropagation()}
-                          onChange={(event) => updateStage(job.id, event.target.value)}
-                        >
-                          {stages.map((stage) => <option key={stage} value={stage}>{stage}</option>)}
-                        </select>
-                      </label>
+                      </span>
                     </td>
                     <td>
                       {job.source_url ? (
@@ -5505,26 +5494,6 @@ function Workspace() {
                 <span className="job-stat-label">Application ID</span>
                 <strong className="job-stat-val" style={{ fontSize: '9px', fontFamily: 'monospace' }}>{selectedApplication.id.slice(0, 8)}...</strong>
               </div>
-            </div>
-
-            <div className="job-details-section">
-              <div className="section-kicker">UPDATE STATUS</div>
-              <div className="app-stage-actions">
-                {stages.map((stage) => (
-                  <button
-                    key={stage}
-                    type="button"
-                    className={`app-stage-btn stage-${stage.toLowerCase()} ${selectedApplication.status === stage ? 'active' : ''}`}
-                    onClick={() => updateModalApplicationStage(stage)}
-                    disabled={applicationUpdating || selectedApplication.status === stage}
-                  >
-                    {selectedApplication.status === stage && <Check size={11} />}
-                    {stage}
-                  </button>
-                ))}
-              </div>
-              {applicationModalFeedback.error && <p className="match-feedback error" role="alert">{applicationModalFeedback.error}</p>}
-              {applicationModalFeedback.success && <p className="match-feedback success" role="status">{applicationModalFeedback.success}</p>}
             </div>
 
             <div className="job-details-section">
